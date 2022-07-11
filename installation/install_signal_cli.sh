@@ -9,6 +9,7 @@ verify_script_is_ran_from_this_dir() {
 }
 verify_script_is_ran_from_this_dir
 
+
 yes | sudo apt-get install default-jre
 # TODO: verify default-jre is installed correctly, using --version command
 yes | sudo apt-get install openjdk-17-jdk
@@ -37,20 +38,45 @@ clone_signal_cli_repo_if_not_exist "$SIGNAL_CLI_GIT_USERNAME" "$SIGNAL_CLI_REPO_
 
 cd signal-cli
 
+build_was_succesfull() {
+    local output="$1"
+    if [[ "$output" == *"BUILD"* ]] && [[ "$output" == *"SUCCESSFUL"* ]]; then
+        echo "Found BUILD and SUCCESSFUL, moving on."
+    else
+        echo "Error, build was not successful. Output=$output"
+    fi
+}
+output=$(./gradlew build)
+build_was_succesfull "$output"
+output=$(./gradlew installDist)
+build_was_succesfull "$output"
+output=$(./gradlew distTar)
+build_was_succesfull "$output"
+output=$(./gradlew fatJar)
+build_was_succesfull "$output"
+output=$(./gradlew run --args="--help")
+build_was_succesfull "$output"
 
-./gradlew build
-# TODO: verify output contains "build successful"
-./gradlew installDist
-# TODO: verify output contains "build successful"
-./gradlew distTar
-# TODO: verify output contains "build successful"
-./gradlew fatJar
-# TODO: verify output contains "build successful"
-./gradlew run --args="--help"
-# TODO: verify output contains "BUILD successful"
-exit 34
+
+# TODO: assert dir exists.
 cd build/distributions
+
 # Unpack the compressed .tar file to the /opt directory.
+# TODO: assert tar file exists.
 sudo tar xf signal-cli-0.*.*.tar -C /opt
+
 # Move the unpacked distribution into the /usr/local/bin/ directory
 sudo ln -sf /opt/signal-cli-0.*.*/bin/signal-cli /usr/local/bin/
+
+# TODO: verify signal-cli works.
+signal_cli_works() {
+    local output="$1"
+    if [[ "$output" == *"signal-cli"* ]] && [[ "$output" == *"0.10"* ]]; then
+        echo "signal-cli works."
+    else
+        echo "Error, signal-cli does not work. Output=$output"
+    fi
+}
+
+output=$(signal-cli --version)
+signal_cli_works "$output"
