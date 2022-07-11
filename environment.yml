@@ -61,3 +61,7 @@ dependencies:
     - pyupgrade
 # Another static type checker for python like mypy.
     - pyright
+# Verify phone number.
+    - phonenumbers
+# Verify email is valid.
+    - py3-validate-email
