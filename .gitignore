@@ -1,6 +1,9 @@
 # Don't sync private data.
 private_data/*
 
+# Don't sync sub repo
+installation/signal-cli*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
