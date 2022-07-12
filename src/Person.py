@@ -94,6 +94,7 @@ class Person:
         self.person_info = person_info
         self.contact_info = contact_info
         self.events: List[Event] = events
+        # self.__dict__
 
     def add_event(self, event: Event):
         """Adds an event to the event list that person attends.
