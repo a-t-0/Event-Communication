@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+
 verify_script_is_ran_from_this_dir() {
     local end_of_path="${PWD:(-12)}"
     if [[ "$end_of_path" != "installation" ]]; then
@@ -8,6 +10,8 @@ verify_script_is_ran_from_this_dir() {
     fi
 }
 verify_script_is_ran_from_this_dir
+
+
 
 
 yes | sudo apt-get install default-jre
@@ -75,8 +79,64 @@ signal_cli_works() {
         echo "signal-cli works."
     else
         echo "Error, signal-cli does not work. Output=$output"
+        exit 5
     fi
 }
 
 output=$(signal-cli --version)
 signal_cli_works "$output"
+
+
+ask_yes_no_question() {
+    local question="$1"
+    while true; do
+		read -p "$question (y/n)" yn
+		case $yn in
+		[Yy]* ) echo "yes"; break;;
+		[Nn]* ) echo "no"; break;;
+		* ) echo "Please answer yes or no." >&2;;
+		esac
+	done
+
+}
+
+
+# Register this computer as sub to your phone.
+
+# Install software that can convert a link into a qr code.
+sudo apt-get install -y libqrencode-dev
+
+device_is_connected(){
+    local command_output="$1"
+    while IFS= read -r line; do
+        #echo "... $line ..."
+        if [[ "$line" == *"this device"* ]]; then
+            echo "Connected"
+        fi
+    done <<< "$command_output"
+}
+
+device_is_registered(){
+    local phone_nr="$1"
+    # Ask user to get phone out and ready to scan linked device.
+    ask_yes_no_question "Will you please open Signal on your phone, go to:Settings>Linked devices>+ and scan the qr code that will appear?"
+    device_is_connected="FALSE"
+
+    while [[ "$device_is_connected" == "FALSE" ]]; do
+        # Generate the signal-cli registration link and convert it into a qr code, to scan with your phone.
+        signal-cli link -n "event-communication" | xargs -L 1 qrencode -o /tmp/qrcode.png & while [ ! -f /tmp/qrcode.png ]; do sleep 1; done; xdg-open /tmp/qrcode.png
+        # This is for newer devices, it was not verified:
+         # signal-cli link -n "optional device name" | xargs -L 1 qrencode -o /tmp/qrcode.png --level=H -v 10 & while [ ! -f /tmp/qrcode.png ]; do sleep 1; done; xdg-open /tmp/qrcode.png`
+        sleep 15
+        # Verify device is registered
+        connected_devices=$(signal-cli -u $phone_nr listDevices)
+        echo "connected_devices=$connected_devices"
+        if [[ $(device_is_connected "$connected_devices") == "Connected" ]]; then
+		    echo "terminating loop. Signal is connected";
+            device_is_connected="TRUE"
+		fi
+	done
+}
+read -p "Please enter your phone number in the format <country code><nr>, like +242612345678 " PHONE_NR
+echo "PHONE_NR=$PHONE_NR"
+device_is_registered "$PHONE_NR"
