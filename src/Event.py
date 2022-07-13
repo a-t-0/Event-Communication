@@ -1,9 +1,9 @@
 """Stores event information."""
 from datetime import datetime
-from typing import List
 
-from helper import parse_string
-from Person import Person
+from src.helper import parse_string
+
+# from src.Person import Person
 
 
 class Event_stage:
@@ -37,12 +37,14 @@ class Event:
         date_and_time: datetime,
         location: str,
         name: str,
-        participants: List[Person],
+        # participants: List[Person],
+        participants,
         stage: Event_stage,
     ):
         # Person identification
         self.name: str = parse_string(name)
         self.location: str = parse_string(location)
         self.datetime: datetime = date_and_time
-        self.participants: List[Person] = participants
+        # self.participants: List[Person] = participants
+        self.participants = participants
         self.stage: Event_stage = stage
