@@ -18,6 +18,7 @@ class Test_person(unittest.TestCase):
     # Initialize test object
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.maxDiff = None
 
     def test_person_to_dict(self):
         """Verifies a person object can be converted to dict.."""
@@ -36,6 +37,7 @@ class Test_person(unittest.TestCase):
                 "phone_nrs": {"mobile": "+32612345678"},
             },
             "events": [],
+            "groups": [],
             "person_info": {
                 "first_name": "One",
                 "known_from": "Internet",
@@ -89,6 +91,7 @@ class Test_person(unittest.TestCase):
                     ),
                 },
             ],
+            "groups": [],
             "person_info": {
                 "first_name": "Jonna",
                 "known_from": "Internet",

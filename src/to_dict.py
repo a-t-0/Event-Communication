@@ -2,6 +2,7 @@
 import copy
 
 from src.Event import Event
+from src.Group import Group
 from src.Person import Person
 
 
@@ -62,6 +63,22 @@ def convert_attributes_to_dict(classkey, data, item, obj, origin_type):
             event_without_participants = copy.deepcopy(event)
             event_without_participants.participants = None
             to_dict(event_without_participants, classkey, origin_type)
+
+    if origin_type == Group and not (
+        isinstance(obj, Person) and (key == "groups")
+    ):
+        data[key] = to_dict(value, classkey, origin_type)
+    if (
+        origin_type == Group
+        and (isinstance(obj, Person))
+        and (key == "groups")
+    ):
+        for group in obj.groups:
+            # Prgroup participants of group of participant of groups from
+            # being printed
+            group_without_participants = copy.deepcopy(group)
+            group_without_participants.participants = None
+            to_dict(group_without_participants, classkey, origin_type)
 
     if origin_type == Person and not (
         isinstance(obj, Event) and (key == "participants")

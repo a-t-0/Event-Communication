@@ -4,6 +4,7 @@ import datetime
 
 from src.Contact_info import Contact_info
 from src.Event import Event, Event_stage
+from src.Group import Group
 from src.Person import Person
 from src.Person_information import Person_information
 
@@ -42,7 +43,7 @@ def get_sample_person_1_no_events():
     person_information = get_sample_person_information(first_name="One")
     contact_info = get_sample_contact_information()
 
-    person = Person(person_information, contact_info, [])
+    person = Person(person_information, contact_info, [], [])
     return person
 
 
@@ -51,7 +52,7 @@ def get_sample_person_2_no_events():
     person_information = get_sample_person_information(first_name="Two")
     contact_info = get_sample_contact_information()
 
-    person = Person(person_information, contact_info, [])
+    person = Person(person_information, contact_info, [], [])
     return person
 
 
@@ -64,6 +65,23 @@ def get_sample_person_two_events():
         person_information,
         contact_info,
         [get_sample_event_1(), get_sample_event_2()],
+        [],
+    )
+    return person
+
+
+def get_sample_person_two_groups():
+    """Returns a sample person that attends 2 groups.
+
+    # TODO: test
+    """
+    person_information = get_sample_person_information()
+    contact_info = get_sample_contact_information()
+
+    person = Person(
+        person_information,
+        contact_info,
+        [get_sample_group_1(), get_sample_group_2()],
     )
     return person
 
@@ -94,6 +112,26 @@ def get_sample_event_1():
         start_date_and_time=start_date_and_time,
     )
     return event
+
+
+def get_sample_group_1():
+    """Returns a sample group named: Group 1."""
+    participants = [
+        get_sample_person_1_no_events(),
+        get_sample_person_2_no_events(),
+    ]
+    group = Group(name="Group 1", participants=participants)
+    return group
+
+
+def get_sample_group_2():
+    """Returns a sample group named: Group 2."""
+    participants = [
+        get_sample_person_1_no_events(),
+        get_sample_person_2_no_events(),
+    ]
+    group = Group(name="Group 2", participants=participants)
+    return group
 
 
 def get_sample_event_2():
