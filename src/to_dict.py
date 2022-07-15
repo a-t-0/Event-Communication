@@ -1,4 +1,6 @@
 """Commonly used helper functions."""
+import copy
+
 from src.Event import Event
 from src.Person import Person
 
@@ -44,10 +46,9 @@ def convert_attributes_to_dict(classkey, data, item, obj, origin_type):
     """
     # unpack item
     key, value = item
-    if (
-        origin_type == Event
-        and (not isinstance(obj, Person))
-        and (key != "events")
+
+    if origin_type == Event and not (
+        isinstance(obj, Person) and (key == "events")
     ):
         data[key] = to_dict(value, classkey, origin_type)
     if (
@@ -55,17 +56,26 @@ def convert_attributes_to_dict(classkey, data, item, obj, origin_type):
         and (isinstance(obj, Person))
         and (key == "events")
     ):
-        data[key] = list(map(lambda x: x.__dict__, value))
+        for event in obj.events:
+            # Prevent participants of event of participant of events from
+            # being printed
+            event_without_participants = copy.deepcopy(event)
+            event_without_participants.participants = None
+            to_dict(event_without_participants, classkey, origin_type)
 
-    if (
-        origin_type == Person
-        and (not isinstance(obj, Event))
-        and (key != "participants")
+    if origin_type == Person and not (
+        isinstance(obj, Event) and (key == "participants")
     ):
         data[key] = to_dict(value, classkey, origin_type)
+
     if (
         origin_type == Person
         and (isinstance(obj, Event))
         and (key == "participants")
     ):
-        data[key] = list(map(lambda x: x.__dict__, value))
+        for participant in obj.participants:
+            # Prevent events of participants of events of person from
+            # being printed.
+            participant_without_events = copy.deepcopy(participant)
+            participant_without_events.events = None
+            to_dict(participant_without_events, classkey, origin_type)

@@ -1,6 +1,9 @@
 """Returns sample data containing persons, for testing purposes."""
 # Specify person information
+import datetime
+
 from src.Contact_info import Contact_info
+from src.Event import Event, Event_stage
 from src.Person import Person
 from src.Person_information import Person_information
 
@@ -57,5 +60,65 @@ def get_sample_person_two_events():
     person_information = get_sample_person_information()
     contact_info = get_sample_contact_information()
 
-    person = Person(person_information, contact_info, [])
+    person = Person(
+        person_information,
+        contact_info,
+        [get_sample_event_1(), get_sample_event_2()],
+    )
     return person
+
+
+def get_sample_event_1():
+    """Returns a sample event named: Event 1."""
+
+    rsvp_deadline = datetime.datetime(
+        year=2020, month=2, day=2, hour=2, minute=2, second=2
+    )
+    start_date_and_time = rsvp_deadline + datetime.timedelta(days=3)
+    end_date_and_time = rsvp_deadline + datetime.timedelta(hours=4)
+    location = "Some street 2, some country, some planet, some universe."
+    name = "Event 1"
+    participants = [
+        get_sample_person_1_no_events(),
+        get_sample_person_2_no_events(),
+    ]
+    stage = Event_stage("planning")
+
+    event = Event(
+        end_date_and_time=end_date_and_time,
+        location=location,
+        name=name,
+        participants=participants,
+        rsvp_deadline=rsvp_deadline,
+        stage=stage,
+        start_date_and_time=start_date_and_time,
+    )
+    return event
+
+
+def get_sample_event_2():
+    """Returns a sample event named: Event 1."""
+
+    rsvp_deadline = datetime.datetime(
+        year=2020, month=1, day=1, hour=1, minute=1, second=1
+    )
+    start_date_and_time = rsvp_deadline + datetime.timedelta(days=3)
+    end_date_and_time = rsvp_deadline + datetime.timedelta(hours=4)
+    location = "Some street 1, some country, some planet, some universe."
+    name = "Event 2"
+    participants = [
+        get_sample_person_1_no_events(),
+        get_sample_person_2_no_events(),
+    ]
+    stage = Event_stage("planning")
+
+    event = Event(
+        end_date_and_time=end_date_and_time,
+        location=location,
+        name=name,
+        participants=participants,
+        rsvp_deadline=rsvp_deadline,
+        stage=stage,
+        start_date_and_time=start_date_and_time,
+    )
+    return event
