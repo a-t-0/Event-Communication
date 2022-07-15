@@ -4,7 +4,7 @@ specifications."""
 import unittest
 from pprint import pprint
 
-from samples.sample_events import get_sample_event_sport
+from samples.sample_events import get_sample_event_1
 from src.helper import todict
 from src.Person import Contact_info, Person_information
 
@@ -34,7 +34,7 @@ class Test_person(unittest.TestCase):
     def test_person_to_dict(self):
         """Verifies a person object can be converted to dict.."""
 
-        event = get_sample_event_sport()
+        event = get_sample_event_1()
         # print(person.__dict__)
         pprint(todict(event, classkey=None))
 
