@@ -5,8 +5,8 @@ import unittest
 from pprint import pprint
 
 from samples.sample_events import get_sample_event_1
-from src.helper import todict
 from src.Person import Contact_info, Person_information
+from src.to_dict import to_dict
 
 # Specify person information
 person_information = Person_information(
@@ -36,7 +36,7 @@ class Test_person(unittest.TestCase):
 
         event = get_sample_event_1()
         # print(person.__dict__)
-        pprint(todict(event, classkey=None))
+        pprint(to_dict(event, classkey=None))
 
         # pylint: disable=W1503
         self.assertFalse(True)
