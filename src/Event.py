@@ -3,8 +3,14 @@ from datetime import datetime
 from typing import List
 
 from src.helper import parse_string
+from src.Plural import Plural
 
 # from src.Person import Person
+
+
+# pylint: disable=R0903
+class Events(Plural):
+    """Stores the Event objects."""
 
 
 class Event_stage:

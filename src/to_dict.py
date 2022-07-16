@@ -96,3 +96,12 @@ def convert_attributes_to_dict(classkey, data, item, obj, origin_type):
             participant_without_events = copy.deepcopy(participant)
             participant_without_events.events = None
             to_dict(participant_without_events, classkey, origin_type)
+
+
+def add_hash_code(obj):
+    """Adds a hash code based on the event dictionary."""
+    the_dict = to_dict(obj)
+    if "hash_code" in the_dict.keys():
+        raise Exception(f"Error, hash code already set for event:{the_dict}")
+    obj.unique_hash = hash(frozenset(the_dict))
+    return obj.unique_hash

@@ -5,9 +5,15 @@ from src.Contact_info import Contact_info
 from src.Event import Event
 from src.Group import Group
 from src.Person_information import Person_information
+from src.Plural import Plural
 
 # TODO: support VCF importing and exporting.
 # https://vcfpy.readthedocs.io/en/stable/
+
+
+# pylint: disable=R0903
+class Persons(Plural):
+    """Stores the Person objects."""
 
 
 class Person:

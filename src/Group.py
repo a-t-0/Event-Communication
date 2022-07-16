@@ -4,6 +4,12 @@
 from ast import List
 
 from src.helper import parse_string
+from src.Plural import Plural
+
+
+# pylint: disable=R0903
+class Groups(Plural):
+    """Stores the Group objects."""
 
 
 class Group:
