@@ -58,18 +58,18 @@ def ensure_private_data_templates_exist(private_dir):
     """
     ensure_private_data_folders_are_created(private_dir)
 
-    persons_filepath = f"{private_dir}/persons.txt"
+    persons_filepath = f"{private_dir}/persons.json"
     # TODO: add unique hashcodes and write them as dict.
     person = get_sample_person_two_events()
     persons = Persons()
     add_object_to_dict(persons, person)
 
-    events_filepath = f"{private_dir}/events.txt"
+    events_filepath = f"{private_dir}/events.json"
     event = get_sample_event_1()
     events = Events()
     add_object_to_dict(events, event)
 
-    groups_filepath = f"{private_dir}/groups.txt"
+    groups_filepath = f"{private_dir}/groups.json"
     group = get_sample_group_1()
     groups = Groups()
     add_object_to_dict(groups, group)
