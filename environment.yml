@@ -61,3 +61,6 @@ dependencies:
     - py3-validate-email
 # Use date formats with dateutil
     - python-dateutil
+# Download files (.apk for sms_ie) using requests
+    - requests
+    - types-requests

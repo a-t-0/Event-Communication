@@ -1,6 +1,11 @@
 # Don't sync private data.
 private_data/*
 
+# Don't sync the sms_ie xml config file as it updates each run.
+installation/*.xml
+# Don't sync the downloaded file.
+*.apk
+
 # Don't sync sub repo
 installation/signal-cli*
 

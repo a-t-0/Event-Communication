@@ -30,16 +30,21 @@ def yes_or_no(question):
     return yes_or_no(f"Please enter y or n.\n{question}")
 
 
-def create_and_write_file(filepath, lines):
+def create_and_write_file(filepath, lines, overwrite=True):
     """
 
     :param filepath:
     :param lines:
 
     """
-    with open(filepath, "a", encoding="utf-8") as some_file:
+
+    if overwrite:
+        write_style = "w"
+    else:
+        write_style = "a"  # append
+    with open(filepath, write_style, encoding="utf-8") as some_file:
         for line in lines:
-            some_file.write(line)
+            some_file.write(line + "\n")
         some_file.close()
 
 
