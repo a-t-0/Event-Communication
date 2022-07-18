@@ -64,3 +64,5 @@ dependencies:
 # Download files (.apk for sms_ie) using requests
     - requests
     - types-requests
+# Load .vcf contact information files
+    - vobject
