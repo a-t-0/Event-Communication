@@ -19,7 +19,10 @@ from installation.export_private_data import (
     ensure_private_data_templates_exist,
 )
 from src.helper import load_dict_from_file
-from src.management.load_vcf2 import vcf_to_dict
+from src.management.parse_vcf import (
+    convert_vcf_dicts_to_persons,
+    convert_vcf_files_to_dicts,
+)
 
 
 def scan_input_vcfs(settings):
@@ -42,21 +45,11 @@ def scan_input_vcfs(settings):
     # Load existing persons.
     # pylint: disable=W0612
     persons, events, groups = load_data(settings)
+    # TODO: convert persons dictionary into Persons object.
 
     # Create persons.
-    convert_vcf_dicts_to_persons(vcf_dicts, persons)
-
-
-def convert_vcf_files_to_dicts(vcf_files):
-    """Loads all incoming vcf file from a filepath, converts them into
-    dictionaries.
-
-    :param vcf_files:
-    """
-    vcf_dicts = {}
-    for vcf_filepath in vcf_files:
-        vcf_dicts[vcf_filepath] = vcf_to_dict(vcf_filepath)
-    return vcf_dicts
+    for vcf_filename, vcf_dict in vcf_dicts.items():
+        persons = convert_vcf_dicts_to_persons(vcf_dict, persons)
 
 
 def get_files_in_dir(some_dir: str, extension: str):
@@ -84,9 +77,3 @@ def load_data(settings: dict) -> tuple[dict, dict, dict]:
     events = load_dict_from_file(settings["events_filepath"])
     groups = load_dict_from_file(settings["groups_filepath"])
     return persons, events, groups
-
-
-def convert_vcf_dicts_to_persons(vcf_dicts, persons):
-    """Converts a vcf dict to a person object."""
-    pprint(vcf_dicts)
-    print(persons)

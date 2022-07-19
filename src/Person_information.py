@@ -14,9 +14,7 @@ class Person_information:
     """Information of person in context to you."""
 
     # pylint: disable=R0903
-    def __init__(
-        self, first_name: str, known_from=None, last_name=None, state=None
-    ):
+    def __init__(self, first_name: str, known_from="", last_name="", state=""):
         # Person identification
         self.first_name: str = parse_string(first_name)
         self.last_name: str = parse_string(last_name)

@@ -32,6 +32,7 @@ sms_ie_dict = {
 
 scan_input_vcfs(sms_ie_dict)
 
+
 # Create a vcf file.
 folder_name = "private_data"
 first_name = "firstname"
