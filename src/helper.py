@@ -77,14 +77,17 @@ def write_dict_to_file(filepath: str, some_dict: dict):
     print(f"to:{filepath}")
 
 
-def load_dict_from_file(filepath: str):
+def load_dict_from_file(filepath: str) -> dict:
     """
 
     :param filepath: str:
 
     """
+    # if not os.path.isfile(filepath):
+    #    raise Exception(f"Error, dir_name={filepath} did not exist.")
 
     # reading the data from the file
+    print(f"filepath={filepath}.")
     with open(
         filepath,
         encoding="utf-8",

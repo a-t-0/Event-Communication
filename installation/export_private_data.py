@@ -49,34 +49,31 @@ def create_dir_if_not_exists(dir_name):
         raise Exception(f"Error, dir_name={dir_name} did not exist.")
 
 
-def ensure_private_data_templates_exist(private_dir):
+def ensure_private_data_templates_exist(settings: dict):
     """Ensures the private data templates for the objects:Person, Event and
     Group are created, such that you can edit them.
 
     If the files already exist, this method will verify the formatting
     and do nothing else.
     """
-    ensure_private_data_folders_are_created(private_dir)
+    ensure_private_data_folders_are_created(settings["private_dir"])
 
-    persons_filepath = f"{private_dir}/persons.json"
     # TODO: add unique hashcodes and write them as dict.
     person = get_sample_person_two_events()
     persons = Persons()
     add_object_to_dict(persons, person)
 
-    events_filepath = f"{private_dir}/events.json"
     event = get_sample_event_1()
     events = Events()
     add_object_to_dict(events, event)
 
-    groups_filepath = f"{private_dir}/groups.json"
     group = get_sample_group_1()
     groups = Groups()
     add_object_to_dict(groups, group)
 
-    export_dict(persons_filepath, persons)
-    export_dict(events_filepath, events)
-    export_dict(groups_filepath, groups)
+    export_dict(settings["persons_filepath"], persons)
+    export_dict(settings["events_filepath"], events)
+    export_dict(settings["groups_filepath"], groups)
 
 
 def add_object_to_dict(objs, new_obj):
