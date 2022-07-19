@@ -5,7 +5,6 @@ Checks if private data structures exist, and if not, creates a template
 private data structure that you can adjust.
 """
 
-from pprint import pprint
 
 from installation.install_sms_reader import get_sms_messages_from_phone
 from src.helper import load_dict_from_file
@@ -27,15 +26,9 @@ sms_ie_dict = {
     "persons_filepath": f"{private_dir}persons.json",
     "events_filepath": f"{private_dir}events.json",
     "groups_filepath": f"{private_dir}groups.json",
-    "vcf_input_path": f"{private_dir}/input_vcf",
-    "vcf_output_path": f"{private_dir}/output_vcf",
+    "vcf_input_path": f"{private_dir}input_vcf/",
+    "vcf_output_path": f"{private_dir}output_vcf/",
 }
-pprint(sms_ie_dict)
-
-
-# Specify vcf in and output files.
-# output_vcf_filepath = "private_data/output.vcf"
-# input_vcf_filepath = "private_data/input.vcf"
 
 scan_input_vcfs(sms_ie_dict)
 

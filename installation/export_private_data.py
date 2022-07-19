@@ -7,7 +7,6 @@
 # Private data folder structure:
 
 import os
-from pprint import pprint
 
 from samples.sample_persons import (
     get_sample_event_1,
@@ -95,8 +94,6 @@ def export_dict(filepath, plural):
     for key, value in plural.items():
         exported_dict[key] = to_dict(value)
 
-    pprint(exported_dict)
-    print(f"filepath={filepath}")
     # if not os.path.exists(filepath):
     write_dict_to_file(filepath, exported_dict)
     if not os.path.exists(filepath):

@@ -28,25 +28,23 @@ def scan_input_vcfs(settings):
     :param settings:
     """
     ensure_private_data_templates_exist(settings)
-
-    # TODO: move into settings.
-
     ensure_private_data_folders_are_created(settings["vcf_input_path"])
     ensure_private_data_folders_are_created(settings["vcf_output_path"])
     vcf_files = get_files_in_dir(settings["vcf_input_path"], "vcf")
+    print("vcf_files")
+    print(vcf_files)
 
     # Convert the vcf files into dictionaries.
     vcf_dicts = convert_vcf_files_to_dicts(vcf_files)
+    print("vcf_dicts=")
     pprint(vcf_dicts)
 
     # Load existing persons.
-    files = get_files_in_dir(settings["private_dir"], "json")
-    print(f"files={files}")
-
     # pylint: disable=W0612
     persons, events, groups = load_data(settings)
 
     # Create persons.
+    convert_vcf_dicts_to_persons(vcf_dicts, persons)
 
 
 def convert_vcf_files_to_dicts(vcf_files):
@@ -70,11 +68,8 @@ def get_files_in_dir(some_dir: str, extension: str):
     :param extension: str:
     """
     vcf_files = []
-    print(f"some_dir={some_dir}")
-
-    # os.chdir(some_dir)
-    for file in glob.glob(f"*.{extension}"):
-        print(file)
+    print(f"some_dir={some_dir}, extension={extension}")
+    for file in glob.glob(f"{some_dir}*.{extension}"):
         vcf_files.append(file)
     return vcf_files
 
@@ -85,9 +80,13 @@ def load_data(settings: dict) -> tuple[dict, dict, dict]:
     :param settings: dict:
     :param settings: dict:
     """
-    print(f'settings["persons_filepath"]={settings["persons_filepath"]}')
-    print(settings["persons_filepath"])
     persons = load_dict_from_file(settings["persons_filepath"])
     events = load_dict_from_file(settings["events_filepath"])
     groups = load_dict_from_file(settings["groups_filepath"])
     return persons, events, groups
+
+
+def convert_vcf_dicts_to_persons(vcf_dicts, persons):
+    """Converts a vcf dict to a person object."""
+    pprint(vcf_dicts)
+    print(persons)

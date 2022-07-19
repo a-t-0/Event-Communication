@@ -1,6 +1,5 @@
 """Commonly used helper functions."""
 import json
-from pprint import pprint
 
 
 def parse_string(string: str):
@@ -73,8 +72,6 @@ def write_dict_to_file(filepath: str, some_dict: dict):
         some_file.write(
             json.dumps(some_dict, indent=4, sort_keys=True, default=str)
         )
-    print(f"wrote:{some_dict}")
-    print(f"to:{filepath}")
 
 
 def load_dict_from_file(filepath: str) -> dict:
@@ -87,7 +84,7 @@ def load_dict_from_file(filepath: str) -> dict:
     #    raise Exception(f"Error, dir_name={filepath} did not exist.")
 
     # reading the data from the file
-    print(f"filepath={filepath}.")
+
     with open(
         filepath,
         encoding="utf-8",
@@ -100,5 +97,4 @@ def load_dict_from_file(filepath: str) -> dict:
     the_dict = json.loads(data)
 
     print("Data type after reconstruction : ", type(the_dict))
-    pprint(the_dict)
     return the_dict
