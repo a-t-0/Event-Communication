@@ -6,14 +6,23 @@ private data structure that you can adjust.
 """
 
 
+from pprint import pprint
+
 from installation.install_sms_reader import get_sms_messages_from_phone
+from src.arg_parser import parse_cli_args
 from src.helper import load_dict_from_file
-from src.management.create_people import scan_input_vcfs
+from src.management.create_minimal_vcf import create_minimal_vcf_file
+from src.management.create_people import (
+    convert_vcf_files_into_dictionaries,
+    scan_input_vcfs,
+)
 from src.management.create_vcf import VCF_creator
+from src.sender.helper_sms import cmd_res
+from src.to_dict import to_dict
 
 output_dir = "sms_ie_output"
 private_dir = "private_data/"
-sms_ie_dict = {
+settings = {
     # ensure_private_data_templates_exist(private_dir)
     "output_dir": output_dir,
     "output_dirpath": f"/sdcard/Download/{output_dir}/",
@@ -30,39 +39,55 @@ sms_ie_dict = {
     "vcf_output_path": f"{private_dir}output_vcf/",
 }
 
-scan_input_vcfs(sms_ie_dict)
+args = parse_cli_args()
+print(args)
+if args.install_signal_cli:
+    output = cmd_res(
+        "cd installation && chmod +x install_signal_cli.sh "
+        + "&& ./install_signal_cli.sh"
+    )
+if args.install_sms_cli:
+    # TODO: change output to sms_messages.json in messages folder.
+    sms_messages = get_sms_messages_from_phone(settings)
+    sms_messages = load_dict_from_file(settings["local_sms_filepath"])
+if args.get_vcf_contacts:
+    persons = scan_input_vcfs(settings)
+    for hashcode, person in persons.items():
+        print(f"hashcode={hashcode}")
+        pprint(to_dict(person))
+if args.create_vcf_file_sample:
+    # Create a detailed vcf file.
+    folder_name = "private_data"
+    first_name = "firstname"
+    last_name = "lastname"
+    tel_mobile = "0612345678"
+    tel_home = ""
+    tel_work = ""
+    email_home = "something@something.com"
+    email_work = ""
+    email_mobile = ""
+    adr_work = "Some street 22 somecity somecountry"
+    adr_home = ""
+    website_url = "https://www.somesite.com"
+    VCF_creator(
+        folder_name,
+        first_name,
+        last_name,
+        tel_mobile,
+        tel_home,
+        tel_work,
+        email_home,
+        email_work,
+        email_mobile,
+        adr_work,
+        adr_home,
+        website_url,
+    )
 
-
-# Create a vcf file.
-folder_name = "private_data"
-first_name = "firstname"
-last_name = "lastname"
-tel_mobile = "0612345678"
-tel_home = ""
-tel_work = ""
-email_home = "something@something.com"
-email_work = ""
-email_mobile = ""
-adr_work = "Some street 22 somecity somecountry"
-adr_home = ""
-website_url = "https://www.somesite.com"
-VCF_creator(
-    folder_name,
-    first_name,
-    last_name,
-    tel_mobile,
-    tel_home,
-    tel_work,
-    email_home,
-    email_work,
-    email_mobile,
-    adr_work,
-    adr_home,
-    website_url,
-)
-
-# Load a vcf file to dict.
-
-# TODO: change output to sms_messages.json in messages folder.
-sms_messages = get_sms_messages_from_phone(sms_ie_dict)
-sms_messages = load_dict_from_file(sms_ie_dict["local_sms_filepath"])
+    # Create minimal vcf file
+    create_minimal_vcf_file(
+        f'{settings["private_dir"]}]minimal.vcf',
+    )
+if args.load_vcf_file_sample:
+    # Load a vcf file to dict.
+    convert_vcf_files_into_dictionaries(settings, [])

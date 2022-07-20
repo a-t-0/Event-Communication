@@ -387,10 +387,10 @@ def get_phone_time(buffer_sec: int) -> tuple[int, int]:
     )  # Plus 1 because the export should happen at the next minute.
 
 
-def get_sms_messages_from_phone(sms_ie_dict) -> dict:
+def get_sms_messages_from_phone(settings) -> dict:
     """Gets sms messages from phone and stores them locally in a .json file.
 
-    :param sms_ie_dict:
+    :param settings:
     """
     # Get the sms_ie .apk file from the release page.
     url = (
@@ -409,20 +409,20 @@ def get_sms_messages_from_phone(sms_ie_dict) -> dict:
     if device_ready():
 
         # Install sms_ie.apk file.
-        adb_install_apk(filename, sms_ie_dict["package_name"])
+        adb_install_apk(filename, settings["package_name"])
 
-        clear_app_data(sms_ie_dict["package_name"])
+        clear_app_data(settings["package_name"])
 
         # Verify sms_ie config file is found and exists.
-        ensure_sms_ie_config_file_exists(sms_ie_dict["phone_xml_path"])
+        ensure_sms_ie_config_file_exists(settings["phone_xml_path"])
 
         # Specify output directory on android device.
         # Verify output directory exists on android device.
-        create_sms_ie_output_folder(sms_ie_dict["output_dirpath"])
+        create_sms_ie_output_folder(settings["output_dirpath"])
 
         # Delete sms_ie output file if it exists on phone.
         output_filepath = (
-            f'{sms_ie_dict["output_dirpath"]}messages-{get_phone_date()}.json'
+            f'{settings["output_dirpath"]}messages-{get_phone_date()}.json'
         )
         print(f"output_filepath={output_filepath}")
         remove_file_if_exists_on_phone(output_filepath)
@@ -434,35 +434,33 @@ def get_sms_messages_from_phone(sms_ie_dict) -> dict:
 
         # Verify config file contains schedule, and if not overwrite config.
         config_content = sms_ie_config_content(
-            export_time, sms_ie_dict["output_dir"]
+            export_time, settings["output_dir"]
         )
 
         # Create local copy of file content:
-        create_and_write_file(sms_ie_dict["local_xml_path"], config_content)
+        create_and_write_file(settings["local_xml_path"], config_content)
 
         # Push config file to device.
         copy_file_from_pc_to_phone(
-            sms_ie_dict["local_xml_path"], sms_ie_dict["phone_xml_path"]
+            settings["local_xml_path"], settings["phone_xml_path"]
         )
 
         if not screen_is_locked():
-            clear_app_data(sms_ie_dict["package_name"])
+            clear_app_data(settings["package_name"])
 
             # Restart sms_ie application
-            restart_application(sms_ie_dict["package_name"])
+            restart_application(settings["package_name"])
 
             # enter, enter
             time.sleep(2)
             print("pressing enter 4 times, to grant permissions")
             send_export_sms_inputs(
-                sms_ie_dict["package_name"], [23, 23, 23, 23], 1
+                settings["package_name"], [23, 23, 23, 23], 1
             )
 
             print("pressing enter,tab, enter to export sms output")
             # enter, tab, enter
-            send_export_sms_inputs(
-                sms_ie_dict["package_name"], [23, 61, 23], 1
-            )
+            send_export_sms_inputs(settings["package_name"], [23, 61, 23], 1)
             print("Waiting 15 seconds for the export of data to be completed.")
             time.sleep(15)
 
@@ -478,13 +476,13 @@ def get_sms_messages_from_phone(sms_ie_dict) -> dict:
 
             # Copy file from phone to local storage
             copy_file_from_phone_to_pc(
-                output_filepath, sms_ie_dict["local_sms_filepath"]
+                output_filepath, settings["local_sms_filepath"]
             )
 
             # Verify the sms messages file exists locally.
-            if not os.path.exists(sms_ie_dict["local_sms_filepath"]):
+            if not os.path.exists(settings["local_sms_filepath"]):
                 raise Exception(
-                    f"Error, filename={sms_ie_dict['local_sms_filepath']} did"
+                    f"Error, filename={settings['local_sms_filepath']} did"
                     + " not exist."
                 )
 
@@ -494,5 +492,5 @@ def get_sms_messages_from_phone(sms_ie_dict) -> dict:
         raise Exception("Please connect phone and enable adb, and try again.")
 
     # Load sms_ie output file content.
-    sms_messages = load_dict_from_file(sms_ie_dict["local_sms_filepath"])
+    sms_messages = load_dict_from_file(settings["local_sms_filepath"])
     return sms_messages

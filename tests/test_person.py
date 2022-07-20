@@ -29,7 +29,7 @@ class Test_person(unittest.TestCase):
 
         expected_dict = {
             "contact_info": {
-                "emails": {"primary": True},
+                "emails": {"primary": "some_email@some_email.com"},
                 "facebook": "https://www.github.com/facebook_user",
                 "github": "https://www.github.com/some_github_user",
                 "linkedin": "https://www.github.com/linkedin_user",
@@ -56,7 +56,7 @@ class Test_person(unittest.TestCase):
         pprint(to_dict(person, classkey=None))
         expected_dict = {
             "contact_info": {
-                "emails": {"primary": True},
+                "emails": {"primary": "some_email@some_email.com"},
                 "facebook": "https://www.github.com/facebook_user",
                 "github": "https://www.github.com/some_github_user",
                 "linkedin": "https://www.github.com/linkedin_user",

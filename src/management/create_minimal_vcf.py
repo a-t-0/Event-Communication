@@ -3,7 +3,7 @@
 import vobject
 
 
-def create_vcf_file(vcf_filepath):
+def create_minimal_vcf_file(vcf_filepath):
     """Creates a .vcf file from a dictionary."""
     person = {
         "n": "Forrest Gump",

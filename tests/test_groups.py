@@ -10,7 +10,10 @@ from src.to_dict import to_dict
 
 # Specify person information
 person_information = Person_information(
-    first_name="Jonna", known_from="Internet", last_name="Doe", state="Walking"
+    first_name="Jonna",
+    states=["Walking"],
+    known_from="Internet",
+    last_name="Doe",
 )
 # Specify contact information
 phone_nrs = {"mobile": "+32612345678"}
@@ -44,7 +47,7 @@ class Test_person(unittest.TestCase):
             "participants": [
                 {
                     "contact_info": {
-                        "emails": {"primary": True},
+                        "emails": {"primary": "some_email@some_email.com"},
                         "facebook": "https://www.github.com/facebook_user",
                         "github": "https://www.github.com/some_github_user",
                         "linkedin": "https://www.github.com/linkedin_user",
@@ -62,7 +65,7 @@ class Test_person(unittest.TestCase):
                 },
                 {
                     "contact_info": {
-                        "emails": {"primary": True},
+                        "emails": {"primary": "some_email@some_email.com"},
                         "facebook": "https://www.github.com/facebook_user",
                         "github": "https://www.github.com/some_github_user",
                         "linkedin": "https://www.github.com/linkedin_user",

@@ -91,10 +91,7 @@ def load_dict_from_file(filepath: str) -> dict:
     ) as f:
         data = f.read()
 
-    print("Data type before reconstruction : ", type(data))
-
     # reconstructing the data as a dictionary
     the_dict = json.loads(data)
 
-    print("Data type after reconstruction : ", type(the_dict))
     return the_dict

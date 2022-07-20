@@ -16,9 +16,9 @@ def get_sample_person_information(first_name: str = "Jonna"):
     """
     person_information = Person_information(
         first_name=first_name,
+        states=["Walking"],
         known_from="Internet",
         last_name="Doe",
-        state="Walking",
     )
     return person_information
 

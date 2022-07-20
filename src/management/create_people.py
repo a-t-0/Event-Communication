@@ -12,7 +12,7 @@ stored. If there are conflicting properties, the user is asked which to select.
 """
 
 import glob
-from pprint import pprint
+from typing import List
 
 from installation.export_private_data import (
     ensure_private_data_folders_are_created,
@@ -20,12 +20,14 @@ from installation.export_private_data import (
 )
 from src.helper import load_dict_from_file
 from src.management.parse_vcf import (
+    convert_person_dict_to_person_obj,
     convert_vcf_dicts_to_persons,
     convert_vcf_files_to_dicts,
 )
+from src.Person import Persons
 
 
-def scan_input_vcfs(settings):
+def scan_input_vcfs(settings) -> Persons:
     """Loads all .vcf files from the input directory.
 
     :param settings:
@@ -33,26 +35,33 @@ def scan_input_vcfs(settings):
     ensure_private_data_templates_exist(settings)
     ensure_private_data_folders_are_created(settings["vcf_input_path"])
     ensure_private_data_folders_are_created(settings["vcf_output_path"])
-    vcf_files = get_files_in_dir(settings["vcf_input_path"], "vcf")
-    print("vcf_files")
-    print(vcf_files)
+    vcf_filepaths = get_files_in_dir(settings["vcf_input_path"], "vcf")
 
+    updated_persons = convert_vcf_files_into_dictionaries(
+        settings, vcf_filepaths
+    )
+    return updated_persons
+
+
+def convert_vcf_files_into_dictionaries(settings, vcf_filepaths) -> Persons:
+    """Converts a list of vcf files into a Persons object."""
     # Convert the vcf files into dictionaries.
-    vcf_dicts = convert_vcf_files_to_dicts(vcf_files)
-    print("vcf_dicts=")
-    pprint(vcf_dicts)
+    vcf_dicts = convert_vcf_files_to_dicts(vcf_filepaths)
 
     # Load existing persons.
     # pylint: disable=W0612
-    persons, events, groups = load_data(settings)
-    # TODO: convert persons dictionary into Persons object.
+    persons_dict, events, groups = load_data(settings)
+
+    # Load pre
+    persons = convert_person_dict_to_person_obj(persons_dict)
 
     # Create persons.
     for vcf_filename, vcf_dict in vcf_dicts.items():
         persons = convert_vcf_dicts_to_persons(vcf_dict, persons)
+    return persons
 
 
-def get_files_in_dir(some_dir: str, extension: str):
+def get_files_in_dir(some_dir: str, extension: str) -> List[str]:
     """Returns all files in a directory that have a certain extension.
 
     :param some_dir: str:
@@ -60,11 +69,10 @@ def get_files_in_dir(some_dir: str, extension: str):
     :param some_dir: str:
     :param extension: str:
     """
-    vcf_files = []
-    print(f"some_dir={some_dir}, extension={extension}")
+    vcf_filepaths = []
     for file in glob.glob(f"{some_dir}*.{extension}"):
-        vcf_files.append(file)
-    return vcf_files
+        vcf_filepaths.append(file)
+    return vcf_filepaths
 
 
 def load_data(settings: dict) -> tuple[dict, dict, dict]:

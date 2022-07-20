@@ -14,7 +14,9 @@ class Person_information:
     """Information of person in context to you."""
 
     # pylint: disable=R0903
-    def __init__(self, first_name: str, known_from="", last_name="", state=""):
+    def __init__(
+        self, first_name: str, states: List, known_from="", last_name=""
+    ):
         # Person identification
         self.first_name: str = parse_string(first_name)
         self.last_name: str = parse_string(last_name)
@@ -22,7 +24,7 @@ class Person_information:
 
         # Person states, e.g. travelling, solid, liquid.
         self.states: List[str] = []
-        self.states.append(parse_string(state))
+        self.states = list(map(parse_string, states))
 
     def add_state(self, state: str):
         """Adds an state to the state list that person attends.

@@ -14,7 +14,9 @@ class Contact_info:
 
     # pylint: disable=R0913
     # pylint: disable=R0903
-    def __init__(self, phone_nrs, emails, github, linkedin, facebook, other):
+    def __init__(
+        self, phone_nrs: dict, emails: dict, github, linkedin, facebook, other
+    ):
         # Person contact information
         # self.phone_nrs: dict = phonenumbers.parse(phone_nrs, None)
         self.phone_nrs: dict = phone_nrs
@@ -67,7 +69,9 @@ class Contact_info:
         if isinstance(email, type(None)):
             return None
         if isinstance(email, str):
-            return bool(re.search(r"^[\w\.\+\-]+\@[\w]+\.[a-z]{2,3}$", email))
+            if bool(re.search(r"^[\w\.\+\-]+\@[\w]+\.[a-z]{2,3}$", email)):
+                return email
+            raise Exception(f"Error, email format was not valid:{email}")
         raise Exception(
             f"Error, string type was:{type(email)} "
             + "whereas it should be of type None or string."

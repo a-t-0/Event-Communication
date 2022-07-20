@@ -17,6 +17,7 @@ from src.Event import Events
 from src.Group import Groups
 from src.helper import write_dict_to_file
 from src.Person import Persons
+from src.Plural import Plural
 from src.to_dict import add_hash_code, to_dict
 
 
@@ -75,7 +76,7 @@ def ensure_private_data_templates_exist(settings: dict):
     export_dict(settings["groups_filepath"], groups)
 
 
-def add_object_to_dict(objs, new_obj):
+def add_object_to_dict(objs: Plural, new_obj):
     """Adds an object to a Plural dictionary.
 
     It computes the hash code of the dictionary of the object, and adds
@@ -84,7 +85,8 @@ def add_object_to_dict(objs, new_obj):
     loops. (A Event contains persons, and a person attends Events,
     creating infinite loops).
     """
-    objs.add_elem(add_hash_code(new_obj), new_obj)
+    hash_code = add_hash_code(new_obj)
+    objs.add_elem(hash_code=hash_code, new_item=new_obj)
 
 
 def export_dict(filepath, plural):
