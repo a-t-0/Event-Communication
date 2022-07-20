@@ -1,8 +1,5 @@
 """Commonly used helper functions."""
-import base64
 import copy
-import hashlib
-from pprint import pprint
 
 from src.Event import Event
 from src.Group import Group
@@ -99,41 +96,3 @@ def convert_attributes_to_dict(classkey, data, item, obj, origin_type):
             participant_without_events = copy.deepcopy(participant)
             participant_without_events.events = None
             to_dict(participant_without_events, classkey, origin_type)
-
-
-def add_hash_code(obj):
-    """Adds a hash code based on the event dictionary."""
-    the_dict = to_dict(obj)
-    pprint(the_dict)
-    if "hash_code" in the_dict.keys():
-        raise Exception(f"Error, hash code already set for event:{the_dict}")
-
-    # obj.unique_hash = hash(frozenset(the_dict))
-    # obj.unique_hash = dict_hash(the_dict)
-    # obj.unique_hash = make_hash(the_dict) # unstable
-    # obj.unique_hash = sha256(frozenset(the_dict))
-    obj.unique_hash = make_hash_sha256(the_dict)
-
-    return obj.unique_hash
-
-
-def make_hash_sha256(o):
-    """Makes a stable hash from an object that is consistent across python
-    restarts."""
-    hasher = hashlib.sha256()
-    hasher.update(repr(make_hashable(o)).encode())
-    return base64.b64encode(hasher.digest()).decode()
-
-
-def make_hashable(o):
-    """Makes an object/dictionary hashable."""
-    if isinstance(o, (tuple, list)):
-        return tuple(make_hashable(e) for e in o)
-
-    if isinstance(o, dict):
-        return tuple(sorted((k, make_hashable(v)) for k, v in o.items()))
-
-    if isinstance(o, (set, frozenset)):
-        return tuple(sorted(make_hashable(e) for e in o))
-
-    return o

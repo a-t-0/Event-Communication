@@ -1,9 +1,9 @@
 """Contains details of a person."""
-from typing import List
 
+from installation.export_private_data import add_object_to_dict
 from src.Contact_info import Contact_info
-from src.Event import Event
-from src.Group import Group
+from src.Event import Event, Events
+from src.Group import Group, Groups
 from src.Person_information import Person_information
 from src.Plural import Plural
 
@@ -24,13 +24,13 @@ class Person:
         self,
         person_info: Person_information,
         contact_info: Contact_info,
-        events: List[Event],
-        groups: List[Group],
+        events: Events,
+        groups: Groups,
     ):
         self.person_info = person_info
         self.contact_info = contact_info
-        self.events: List[Event] = events
-        self.groups: List[Event] = groups
+        self.events: Events = events
+        self.groups: Groups = groups
         # self.__dict__
 
     def add_event(self, event: Event):
@@ -41,7 +41,7 @@ class Person:
         """
         if event in self.events:
             raise Exception(f"Error, {event.name} is already in the events.")
-        self.events.append(event)
+        add_object_to_dict(self.events, event)
 
     def add_group(self, group: Group):
         """Adds an group to the group list that person attends.
@@ -51,4 +51,5 @@ class Person:
         """
         if group in self.groups:
             raise Exception(f"Error, {group.name} is already in the groups.")
-        self.groups.append(group)
+
+        add_object_to_dict(self.groups, group)

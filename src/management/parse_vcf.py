@@ -1,6 +1,7 @@
 """Parses vcf file to create dictionary."""
 
 
+from pprint import pprint
 from typing import List
 
 from installation.export_private_data import add_object_to_dict
@@ -129,14 +130,15 @@ def convert_person_dict_to_person_obj(dict_with_hash: dict) -> Person:
     return persons
 
 
-def convert_events_list_of_dicts_to_events(events_list: List) -> Events:
+def convert_events_list_of_dicts_to_events(incoming_events: dict) -> Events:
     """Converts a list with event dictionaries into an Events object.
 
     :param events_list: List:
     :param events_list: List:
     """
     events = Events()
-    for event_dict in events_list:
+    pprint(incoming_events)
+    for hashcode, event_dict in incoming_events.items():
         end_date_and_time = event_dict["end_date_and_time"]
         location = event_dict["location"]
         name = event_dict["name"]
@@ -154,6 +156,8 @@ def convert_events_list_of_dicts_to_events(events_list: List) -> Events:
         )
 
         # TODO; verify hash in new event object is same as hash from dict.
+        if hashcode == "":
+            print("TODO")
         add_object_to_dict(events, event)
 
     return events

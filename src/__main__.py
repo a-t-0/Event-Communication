@@ -24,7 +24,6 @@ from src.to_dict import to_dict
 output_dir = "sms_ie_output"
 private_dir = "private_data/"
 settings = {
-    # ensure_private_data_templates_exist(private_dir)
     "output_dir": output_dir,
     "output_dirpath": f"/sdcard/Download/{output_dir}/",
     "phone_xml_path": "/data/data/com.github.tmo1.sms_ie/shared_prefs/com."

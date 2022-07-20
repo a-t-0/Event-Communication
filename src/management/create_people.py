@@ -51,6 +51,8 @@ def convert_vcf_files_into_dictionaries(settings, vcf_filepaths) -> Persons:
     # Load existing persons.
     # pylint: disable=W0612
     persons_dict, events, groups = load_data(settings)
+    # for person_dict in persons_dict.items():
+    #    pprint(person_dict)
 
     # Load pre
     persons = convert_person_dict_to_person_obj(persons_dict)
@@ -81,6 +83,7 @@ def load_data(settings: dict) -> tuple[dict, dict, dict]:
     :param settings: dict:
     :param settings: dict:
     """
+    ensure_private_data_templates_exist(settings)
     persons = load_dict_from_file(settings["persons_filepath"])
     events = load_dict_from_file(settings["events_filepath"])
     groups = load_dict_from_file(settings["groups_filepath"])
