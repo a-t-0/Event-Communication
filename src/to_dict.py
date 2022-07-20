@@ -1,5 +1,7 @@
 """Commonly used helper functions."""
+import base64
 import copy
+import hashlib
 from pprint import pprint
 
 from src.Event import Event
@@ -108,27 +110,30 @@ def add_hash_code(obj):
 
     # obj.unique_hash = hash(frozenset(the_dict))
     # obj.unique_hash = dict_hash(the_dict)
-    obj.unique_hash = make_hash(the_dict)
+    # obj.unique_hash = make_hash(the_dict) # unstable
     # obj.unique_hash = sha256(frozenset(the_dict))
+    obj.unique_hash = make_hash_sha256(the_dict)
+
     return obj.unique_hash
 
 
-def make_hash(o):
+def make_hash_sha256(o):
+    """Makes a stable hash from an object that is consistent across python
+    restarts."""
+    hasher = hashlib.sha256()
+    hasher.update(repr(make_hashable(o)).encode())
+    return base64.b64encode(hasher.digest()).decode()
 
-    """Makes a hash from a dictionary, list, tuple or set to any level, that
-    contains only other hashable types (including any lists, tuples, sets, and
-    dictionaries)."""
 
-    if isinstance(o, (set, tuple, list)):
+def make_hashable(o):
+    """Makes an object/dictionary hashable."""
+    if isinstance(o, (tuple, list)):
+        return tuple(make_hashable(e) for e in o)
 
-        return tuple(make_hash(e) for e in o)
+    if isinstance(o, dict):
+        return tuple(sorted((k, make_hashable(v)) for k, v in o.items()))
 
-    if not isinstance(o, dict):
+    if isinstance(o, (set, frozenset)):
+        return tuple(sorted(make_hashable(e) for e in o))
 
-        return hash(o)
-
-    new_o = copy.deepcopy(o)
-    for k, v in new_o.items():
-        new_o[k] = make_hash(v)
-
-    return hash(tuple(frozenset(sorted(new_o.items()))))
+    return o

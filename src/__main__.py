@@ -8,6 +8,7 @@ private data structure that you can adjust.
 
 from pprint import pprint
 
+from installation.export_private_data import export_dict
 from installation.install_sms_reader import get_sms_messages_from_phone
 from src.arg_parser import parse_cli_args
 from src.helper import load_dict_from_file
@@ -55,6 +56,7 @@ if args.get_vcf_contacts:
     for hashcode, person in persons.items():
         print(f"hashcode={hashcode}")
         pprint(to_dict(person))
+    export_dict(settings["persons_filepath"], persons)
 if args.create_vcf_file_sample:
     # Create a detailed vcf file.
     folder_name = "private_data"
