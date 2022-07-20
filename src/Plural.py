@@ -36,12 +36,7 @@ class Plural(dict):
                             f"{some_hash} {person.person_info.first_name} "
                             + f"{person.person_info.last_name}"
                         )
-                    raise Exception(
-                        f"Error, can't add: {new_item.person_info.first_name},"
-                        + f" {new_item.person_info.last_name}"
-                        + " it is already in "
-                        + f"the list:{self}."
-                    )
+                    merge_person(elem.__dict__, new_item.__dict__)
             else:
                 raise Exception(
                     "Object type not supported, it does not have"
@@ -50,3 +45,36 @@ class Plural(dict):
                     + f"type:{type(elem)}, {elem.person_info.first_name}"
                 )
         self[hash_code] = new_item
+
+
+def merge_person(old_person_dict: dict, new_person_dict: dict):
+    """Merges the new person information into the old person information if
+    there is a difference and the old person did not yet have that attribute.
+
+    TODO: allow for overwriting blank/default values from new to old.
+    """
+    # Check if new person has different values.
+    for attr, value in old_person_dict.items():
+        if attr in new_person_dict.keys():
+            if attr in ["person_info", "contact_info"]:
+                merge_person(
+                    old_person_dict[attr].__dict__,
+                    new_person_dict[attr].__dict__,
+                )
+            elif isinstance(value, dict):
+                merge_person(value, new_person_dict[attr])
+            else:
+                if value != new_person_dict[attr]:
+                    raise Exception(
+                        f"Error, new_person_dic has attr[{attr}]:"
+                        + f"{new_person_dict.__dict__[attr]}, yet "
+                        + f"old_person_dict has:{value}"
+                    )
+    # Check if new person has different attributes:
+    print(f"new_person_dict={new_person_dict}")
+    if isinstance(new_person_dict, dict):
+        for attr, value in new_person_dict.items():
+            if attr not in old_person_dict.keys():
+                # TODO: verify if you can set attribute value by name like
+                # this.
+                old_person_dict.__dict__[attr] = value
