@@ -18,7 +18,7 @@ from installation.export_private_data import (
     ensure_private_data_folders_are_created,
     ensure_private_data_templates_exist,
 )
-from src.helper import load_dict_from_file
+from src.helper import convert_events_dict_to_list, load_dict_from_file
 from src.management.parse_vcf import (
     convert_person_dict_to_person_obj,
     convert_vcf_dicts_to_persons,
@@ -83,5 +83,8 @@ def load_data(settings: dict) -> tuple[dict, dict, dict]:
     """
     persons = load_dict_from_file(settings["persons_filepath"])
     events = load_dict_from_file(settings["events_filepath"])
+    events_list = convert_events_dict_to_list(events)
+    print(f"events={events}")
+    print(f"events_list={events_list}")
     groups = load_dict_from_file(settings["groups_filepath"])
-    return persons, events, groups
+    return persons, events_list, groups

@@ -5,8 +5,9 @@ from typing import List
 
 from installation.export_private_data import add_object_to_dict
 from src.Contact_info import Contact_info
-from src.Event import Event, Events
+from src.Event import Event
 from src.Group import Group, Groups
+from src.helper import convert_events_dict_to_list
 from src.management.load_vcf2 import vcf_to_dict
 from src.Person import Person, Persons
 from src.Person_information import Person_information
@@ -97,6 +98,10 @@ def convert_person_dict_to_person_obj(dict_with_hash: dict) -> Person:
     for hashcode, person_dict in dict_with_hash.items():
         ci = person_dict["contact_info"]
         pi = person_dict["person_info"]
+        if isinstance(person_dict["events"], dict):
+            person_event = convert_events_dict_to_list(person_dict["events"])
+        else:
+            person_event = person_dict["events"]
 
         # (self, phone_nrs: dict, emails, github, linkedin, facebook, other)
         contact_info = Contact_info(
@@ -114,7 +119,9 @@ def convert_person_dict_to_person_obj(dict_with_hash: dict) -> Person:
             last_name=pi["last_name"],
         )
 
-        events = convert_events_list_of_dicts_to_events(person_dict["events"])
+        events = convert_events_list_of_dicts_to_events(person_event)
+        print(f"events={events}")
+
         # TODO: add person to events
 
         groups = convert_group_list_groups(person_dict["groups"])
@@ -129,14 +136,19 @@ def convert_person_dict_to_person_obj(dict_with_hash: dict) -> Person:
     return persons
 
 
-def convert_events_list_of_dicts_to_events(events_list: List) -> Events:
+def convert_events_list_of_dicts_to_events(events_list: List) -> List[Event]:
     """Converts a list with event dictionaries into an Events object.
 
     :param events_list: List:
     :param events_list: List:
     """
-    events = Events()
+    events = []
+    print(f"events_list={events_list}")
+    if isinstance(events_list, dict):
+        raise Exception("dict")
     for event_dict in events_list:
+        # print(f'event_dict["end_date_and_time"]={event_dict["end_date_and_time"]}')
+        print(f'event_dict["end_date_and_time"]={event_dict}')
         end_date_and_time = event_dict["end_date_and_time"]
         location = event_dict["location"]
         name = event_dict["name"]
@@ -154,7 +166,8 @@ def convert_events_list_of_dicts_to_events(events_list: List) -> Events:
         )
 
         # TODO; verify hash in new event object is same as hash from dict.
-        add_object_to_dict(events, event)
+        # add_object_to_dict(events, event)
+        events.append(event)
 
     return events
 

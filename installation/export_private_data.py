@@ -71,9 +71,14 @@ def ensure_private_data_templates_exist(settings: dict):
     groups = Groups()
     add_object_to_dict(groups, group)
 
-    export_dict(settings["persons_filepath"], persons)
-    export_dict(settings["events_filepath"], events)
-    export_dict(settings["groups_filepath"], groups)
+    for filepath, some_object in [
+        (settings["persons_filepath"], persons),
+        (settings["events_filepath"], events),
+        (settings["groups_filepath"], groups),
+    ]:
+        print(f"filepath={filepath}")
+        if not os.path.isfile(filepath):
+            export_dict(filepath, some_object)
 
 
 def add_object_to_dict(objs: Plural, new_obj):

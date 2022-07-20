@@ -95,3 +95,15 @@ def load_dict_from_file(filepath: str) -> dict:
     the_dict = json.loads(data)
 
     return the_dict
+
+
+def convert_events_dict_to_list(events_dict: dict):
+    """Converts events dictionary with hash code as key and dict as value, into
+    a list of dicts."""
+    events_list = []
+    for hashcode, event_dict in events_dict.items():
+        if event_dict["unique_hash"] == hashcode:
+            events_list.append(event_dict)
+        else:
+            raise Exception(f"Error, hash invalid:{event_dict}")
+    return events_list
